@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
 
 	config.vm.provider "virtualbox" do |v|
 		v.name = "docker-dev"
-  		v.gui = true
+  		v.gui = false
 		v.memory = 1024
 		v.cpus = 1
 	end
