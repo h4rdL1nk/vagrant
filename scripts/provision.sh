@@ -3,7 +3,8 @@
 sudo yum install -y yum-utils \
   device-mapper-persistent-data \
   lvm2 \
-  epel-release
+  epel-release \
+  git
 
 sudo yum-config-manager \
     --add-repo \
@@ -12,3 +13,6 @@ sudo yum-config-manager \
 sudo yum install -y docker-ce python2-pip
 
 pip install --upgrade pip ansible
+
+sudo systemctl enable docker.service
+sudo systemctl start docker.service
