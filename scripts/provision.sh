@@ -16,6 +16,3 @@ pip install --upgrade pip ansible
 
 sudo systemctl enable docker.service
 sudo systemctl start docker.service
-
-cd /opt \
-   && git clone https://www.github.com/h4rdL1nk/ansible 

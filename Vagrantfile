@@ -6,7 +6,8 @@ Vagrant.configure("2") do |config|
 	config.vm.hostname = "docker-dev"
 	config.vm.post_up_message = "Vagrant box up - connect with 'vagrant ssh'"
 	config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: true
-	config.vm.provision "shell", path: "scripts/provision.sh"
+	#config.vm.provision "shell", path: "scripts/provision.sh"
+	config.vm.provision "ansible", playbook: "ansible/play.yml"
 
 	config.vm.provider "virtualbox" do |v|
 		v.name = "docker-dev"
