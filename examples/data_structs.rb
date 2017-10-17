@@ -1,6 +1,6 @@
 SERVERS = [
     {
-        :rol => 'kamailio',
+        :role => 'kamailio',
         :hostname => 'kamailio01',
         :aws => {
                 :ec2 => {
@@ -19,7 +19,7 @@ SERVERS = [
         }
     },
     {
-        :rol => 'kamailio',
+        :role => 'kamailio',
         :hostname => 'kamailio02',
         :aws => {
                 :ec2 => {
@@ -32,13 +32,13 @@ SERVERS = [
                         },
                         :network => {
                                 :public => true,
-                                :private => '10.172.88.10'
+                                :private => '10.172.89.10'
                         }
                 }
         }
     },
     {
-        :rol => 'kamailio',
+        :role => 'kamailio',
         :hostname => 'kamailio03',
         :aws => {
                 :ec2 => {
@@ -51,7 +51,7 @@ SERVERS = [
                         },
                         :network => {
                                 :public => true,
-                                :private => '10.172.88.10'
+                                :private => '10.172.90.10'
                         }
                 }
         }
