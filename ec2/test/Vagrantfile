@@ -1,15 +1,43 @@
 load 'config.rb'
+$ansible_config = '../../ansible/ansible.cfg' 
 
 count = 0
 
 SERVERS.each do |server|
-        if count < AWS[:vpc][:subnets].length
-        then
-                puts AWS[:vpc][:subnets][count][:id]
-                count = count + 1
-        else
-                count = 0
-                puts AWS[:vpc][:subnets][count][:id]
-        end
+
+	config.vm.define "#{server[:hostname]}", primary: true do |d|
+                        d.vm.hostname = "#{server[:hostname]}"
+                        d.vm.synced_folder '.', '/vagrant', disabled: true
+
+                        d.vm.provider :aws do |aws,override|
+                                d.vm.box = $ec2_box
+                                aws.instance_type = "#{server[:aws][:ec2][:type]}"
+                                aws.access_key_id = "#{AWS[:credentials][:keyid]}" 
+                                aws.secret_access_key = "#{AWS[:credentials][:accesskey]}" 
+                                aws.keypair_name = ""#{server[:aws][:ec2][:keypair]}"" 
+                                aws.region = "#{AWS[:credentials][:region]}" 
+                                aws.ami = "#{server[:aws][:ec2][:ami][:id]}" 
+                                aws.subnet_id = "#{server[:aws][:ec2][:network][:subnet]}" 
+                                aws.security_groups = "#{server[:aws][:ec2][:securitygroups]}" 
+                                if defined? server[:aws][:ec2][:network][:private] 
+                                        aws.private_ip_address = "#{server[:aws][:ec2][:network][:private]}"
+                                end
+                                aws.tags = {
+                                        'Name' => "#{server[:hostname]}",
+                                        'app' => "#{server[:role]}",
+                                        'os' => "#{server[:aws][:ec2][:ami][:os]}" 
+                                }
+                                aws.associate_public_ip = "#{server[:aws][:ec2][:network][:public]}" 
+				if aws.associate_public_ip
+				then
+					aws.ssh_host_attribute = :public_ip_address
+				else
+					aws.ssh_host_attribute = "#{server[:aws][:ec2][:network][:private]}" 
+				end
+                                override.ssh.username = "#{server[:aws][:ec2][:ami][:ssh][:user]}" 
+                                override.ssh.private_key_path = ""
+                        end
+
+	
 end
 

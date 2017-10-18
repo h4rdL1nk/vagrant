@@ -1,64 +1,29 @@
 
 SERVERS = [
     {
-	:rol => 'kamailio',
-	:hostname => 'kamailio01',
+	:role => 'master',
+	:hostname => 'jenkins-master-1.madisonmk.com',
 	:aws => {
 		:ec2 => {
 			:type => 't2.micro',
 			:keypair => 'KP-digitelts-pro-eu-central-1',
-			:securitygroup => 'sg-a7ad6dcd',
+			:securitygroups => [
+				'sg-a7ad6dcd'
+			]
 			:ami => {
 				:id => 'ami-98043785',
-				:os => 'debian'
+				:os => 'debian',
+				:ssh => {
+					:user => 'admin'
+				}	
 			},
 			:network => {
 				:subnet => 'subnet-5c6cad37',
 				:public => true,
-				:private => '10.172.88.10'
+				:private => '10.172.88.24'
 			}
 		}
 	}
-    },
-    {
-        :rol => 'kamailio',
-        :hostname => 'kamailio02',
-        :aws => {
-                :ec2 => {
-                        :type => 't2.micro',
-                        :keypair => 'KP-digitelts-pro-eu-central-1',
-                        :securitygroup => 'sg-a7ad6dcd',
-                        :ami => {
-                                :id => 'ami-98043785',
-                                :os => 'debian'
-                        },
-                        :network => {
-				:subnet => 'subnet-366a6b4c',
-                                :public => true,
-                                :private => '10.172.89.10'
-                        }
-                }
-        }
-    },
-    {
-        :rol => 'kamailio',
-        :hostname => 'kamailio03',
-        :aws => {
-                :ec2 => {
-                        :type => 't2.micro',
-                        :keypair => 'KP-digitelts-pro-eu-central-1',
-                        :securitygroup => 'sg-a7ad6dcd',
-                        :ami => {
-                                :id => 'ami-98043785',
-                                :os => 'debian'
-                        },
-                        :network => {
-				:subnet => 'subnet-ee21daa3',
-                                :public => true,
-                                :private => '10.172.90.10'
-                        }
-                }
-        }
     }
 ]
 
