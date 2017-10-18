@@ -16,11 +16,11 @@ SERVERS.each do |server|
                                 aws.instance_type = "#{server[:aws][:ec2][:type]}"
                                 aws.access_key_id = "#{AWS[:credentials][:keyid]}" 
                                 aws.secret_access_key = "#{AWS[:credentials][:accesskey]}" 
-                                aws.keypair_name = ""#{server[:aws][:ec2][:keypair]}"" 
+                                aws.keypair_name = "#{server[:aws][:ec2][:keypair]}" 
                                 aws.region = "#{AWS[:credentials][:region]}" 
                                 aws.ami = "#{server[:aws][:ec2][:ami][:id]}" 
                                 aws.subnet_id = "#{server[:aws][:ec2][:network][:subnet]}" 
-                                aws.security_groups = "#{server[:aws][:ec2][:securitygroups]}" 
+                                aws.security_groups = server[:aws][:ec2][:securitygroups] 
                                 if defined? server[:aws][:ec2][:network][:private] 
                                         aws.private_ip_address = "#{server[:aws][:ec2][:network][:private]}"
                                 end
