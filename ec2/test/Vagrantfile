@@ -1,8 +1,10 @@
 load 'config.rb'
-$ansible_config = '../../ansible/ansible.cfg' 
+load 'aws_access.rb'
+$ansible_config = '../../ansible/ansible.cfg'
 
-count = 0
+$ec2_box = "dummy"
 
+Vagrant.configure("2") do |config|
 SERVERS.each do |server|
 
 	config.vm.define "#{server[:hostname]}", primary: true do |d|
@@ -35,9 +37,13 @@ SERVERS.each do |server|
 					aws.ssh_host_attribute = "#{server[:aws][:ec2][:network][:private]}" 
 				end
                                 override.ssh.username = "#{server[:aws][:ec2][:ami][:ssh][:user]}" 
-                                override.ssh.private_key_path = ""
+                                override.ssh.private_key_path = "key.pem"
                         end
 
-	
+			config.vm.provision "shell",
+    				inline: "uname -a"	
+	end
+
+end
 end
 
