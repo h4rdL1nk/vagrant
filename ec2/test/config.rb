@@ -2,28 +2,53 @@
 SERVERS = [
     {
 	:role => 'master',
-	:hostname => 'jenkins-master-1.madisonmk.com',
+	:hostname => 'swarm-test-1',
 	:aws => {
 		:ec2 => {
-			:type => 't2.micro',
+			:type => 't2.nano',
 			:keypair => 'KP-inftel-pro',
 			:securitygroups => [
-				'sg-a7ad6dcd'
+				'sg-e966e691'
 			],
 			:ami => {
-				:id => 'ami-98043785',
-				:os => 'debian',
+				:id => 'ami-c229fabb',
+				:os => 'ubuntu',
 				:ssh => {
-					:user => 'admin'
+					:user => 'ubuntu'
 				}	
 			},
 			:network => {
-				:subnet => 'subnet-5c6cad37',
+				:subnet => 'subnet-4a0c0f2e',
 				:public => true,
-				:private => '10.172.88.24'
+				:private => '10.172.57.240'
 			}
 		}
 	}
+    },
+    {
+        :role => 'master',
+        :hostname => 'swarm-test-2',
+        :aws => {
+                :ec2 => {
+                        :type => 't2.nano',
+                        :keypair => 'KP-inftel-pro',
+                        :securitygroups => [
+                                'sg-e966e691'
+                        ],
+                        :ami => {
+                                :id => 'ami-c229fabb',
+                                :os => 'ubuntu',
+                                :ssh => {
+                                        :user => 'ubuntu'
+                                }
+                        },
+                        :network => {
+                                :subnet => 'subnet-6c50511a',
+                                :public => true,
+                                :private => '10.172.58.240'
+                        }
+                }
+        }
     }
 ]
 
