@@ -1,0 +1,8 @@
+---
+
+- name: "Servers provision"
+  hosts: all
+  roles:
+     - role: python
+       version: 2.7
+     - docker-ce      
