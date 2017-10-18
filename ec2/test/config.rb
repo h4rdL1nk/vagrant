@@ -11,7 +11,7 @@ SERVERS = [
 				'sg-e966e691'
 			],
 			:ami => {
-				:id => 'ami-c229fabb',
+				:id => 'ami-eed00d97',
 				:os => 'ubuntu',
 				:ssh => {
 					:user => 'ubuntu'
@@ -36,7 +36,7 @@ SERVERS = [
                                 'sg-e966e691'
                         ],
                         :ami => {
-                                :id => 'ami-c229fabb',
+                                :id => 'ami-eed00d97',
                                 :os => 'ubuntu',
                                 :ssh => {
                                         :user => 'ubuntu'
