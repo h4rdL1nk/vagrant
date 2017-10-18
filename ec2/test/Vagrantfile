@@ -30,11 +30,11 @@ Vagrant.configure("2") do |config|
                 end
 
                 aws.tags = {
-                    'Name' => "#{server[:hostname]}",
-                    'app' => "#{server[:role]}",
-                    'os' => "#{server[:aws][:ec2][:ami][:os]}" 
+                        'Name' => "#{server[:hostname]}",
+                        'app' => "#{server[:role]}",
+                        'os' => "#{server[:aws][:ec2][:ami][:os]}" 
                     }
-                    
+
                 aws.associate_public_ip = "#{server[:aws][:ec2][:network][:public]}" 
 
                 if aws.associate_public_ip
