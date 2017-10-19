@@ -26,7 +26,7 @@ SERVERS = [
 	}
     },
     {
-        :role => 'master',
+        :role => 'worker',
         :hostname => 'swarm-test-2',
         :aws => {
                 :ec2 => {
