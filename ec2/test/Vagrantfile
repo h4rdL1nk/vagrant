@@ -28,7 +28,7 @@ Vagrant.configure("2") do |config|
                         'Name' => "#{server[:hostname]}",
                         'app' => "#{server[:role]}",
                         'os' => "#{server[:aws][:ec2][:ami][:os]}" 
-                    }
+                }
 
                 if defined? server[:aws][:ec2][:network][:private] 
                 then
@@ -67,12 +67,15 @@ Vagrant.configure("2") do |config|
                 config_file: $ansible_config ,
                 playbook: "config.yml"
 
-            if server[:role] == "master"
-            then
-                d.vm.provision "script",
+            case server[:role]
+            when "master"
+                initOutput = d.vm.provision "shell",
                     path: "../../scripts/swarm/swarm-init.sh"
+            when "worker"
+                d.vm.provision "shell",
+                    path: "../../scripts/swarm/swarm-add-node.sh"
             end
-            
+
     	end
 
     end
