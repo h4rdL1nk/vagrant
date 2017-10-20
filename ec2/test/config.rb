@@ -62,7 +62,7 @@ SERVERS = [
             }
         }
     },
-     {
+    {
         :swarm => {
             :role => 'manager',
             :manager => {
