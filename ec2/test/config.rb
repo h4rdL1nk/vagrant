@@ -2,7 +2,12 @@
 SERVERS = [
 
     {
-        :role => 'master',
+        :swarm => {
+		:role => 'manager',
+		:manager => {
+			:ip => '10.172.57.240'
+		}
+        },
         :hostname => 'swarm-test-1',
         :aws => {
             :ec2 => {
@@ -27,7 +32,12 @@ SERVERS = [
         }
     },
     {
-        :role => 'worker',
+	:swarm => {
+        	:role => 'worker',
+		:manager => {
+			:ip => '10.172.57.240'	
+		}
+	},
         :hostname => 'swarm-test-2',
         :aws => {
             :ec2 => {

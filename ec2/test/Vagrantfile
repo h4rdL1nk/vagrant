@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
                 aws.security_groups = server[:aws][:ec2][:securitygroups]
                 aws.tags = {
                         'Name' => "#{server[:hostname]}",
-                        'app' => "#{server[:role]}",
+                        'app' => "#{server[:swarm][:role]}",
                         'os' => "#{server[:aws][:ec2][:ami][:os]}" 
                 }
 
@@ -61,16 +61,17 @@ Vagrant.configure("2") do |config|
 
             d.vm.provision "ansible",
                 config_file: $ansible_config ,
-                raw_arguments: "-e swarm=true -e rol=#{server[:role]}",
+                raw_arguments: "-e swarm=true -e rol=#{server[:swarm][:role]}",
                 playbook: "config.yml"
 
-            case server[:role]
-            when "master"
+            case server[:swarm][:role]
+            when "manager"
                 initOutput = d.vm.provision "shell",
                     path: "../../scripts/swarm/swarm-init.sh"
             when "worker"
                 d.vm.provision "shell",
-                    inline: "uname -a"
+	            args: "#{server[:swarm][:manager][:ip]} worker",	
+                    path: "../../scripts/swarm/swarm-add-node.sh"
             end
 
         end
