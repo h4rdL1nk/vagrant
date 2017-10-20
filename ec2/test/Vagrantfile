@@ -70,6 +70,8 @@ Vagrant.configure("2") do |config|
                 raw_arguments: "-e swarm=true -e rol=#{server[:swarm][:role]}",
                 playbook: "config.yml"
 
+            $addNodeArgs = $swarmInitiatorIp + " #{server[:swarm][:role]}"
+
             case server[:swarm][:role]
                 when "manager"
                     if server[:swarm][:manager][:initiator]
@@ -78,12 +80,12 @@ Vagrant.configure("2") do |config|
                             path: "../../scripts/swarm/swarm-init.sh"
                     else
                         d.vm.provision "shell",
-                            args: "${swarmInitiatorIp} #{server[:swarm][:role]}",
+                            args: $addNodeArgs,
                             path: "../../scripts/swarm/swarm-add-node.sh"
                     end
                 when "worker"
                     d.vm.provision "shell",
-                    args: "${swarmInitiatorIp} #{server[:swarm][:role]}",
+                    args: $addNodeArgs,
                         path: "../../scripts/swarm/swarm-add-node.sh"
             end
 
