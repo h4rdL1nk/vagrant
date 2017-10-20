@@ -88,7 +88,7 @@ SERVERS = [
                 :network => {
                     :subnet => 'subnet-6c50511a',
                     :public => true,
-                    :private => '10.172.59.240'
+                    :private => '10.172.58.241'
                 }
             }
         }
