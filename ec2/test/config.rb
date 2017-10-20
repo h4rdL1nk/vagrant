@@ -61,5 +61,36 @@ SERVERS = [
                 }
             }
         }
+    },
+     {
+        :swarm => {
+            :role => 'manager',
+            :manager => {
+                :ip => '10.172.57.240',
+                :initiator => false
+            }
+        },
+        :hostname => 'swarm-test-3',
+        :aws => {
+            :ec2 => {
+                :type => 't2.nano',
+                :keypair => 'KP-inftel-pro',
+                :securitygroups => [
+                    'sg-e966e691'
+                ],
+                :ami => {
+                    :id => 'ami-eed00d97',
+                    :os => 'ubuntu',
+                    :ssh => {
+                        :user => 'ubuntu'
+                    }
+                },
+                :network => {
+                    :subnet => 'subnet-6c50511a',
+                    :public => true,
+                    :private => '10.172.59.240'
+                }
+            }
+        }
     }
 ]
