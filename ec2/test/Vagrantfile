@@ -29,7 +29,9 @@ Vagrant.configure("2") do |config|
                 aws.keypair_name = "#{server[:aws][:ec2][:keypair]}" 
                 aws.region = "#{AWS[:credentials][:region]}" 
                 aws.ami = "#{server[:aws][:ec2][:ami][:id]}" 
-                aws.subnet_id = "#{server[:aws][:ec2][:network][:subnet]}" 
+                aws.subnet_id = "#{server[:aws][:ec2][:network][:subnet]}"
+                aws.private_ip_address = "#{server[:aws][:ec2][:network][:private]}"
+                aws.associate_public_ip = "#{server[:aws][:ec2][:network][:public]}" 
                 aws.security_groups = server[:aws][:ec2][:securitygroups]
                 aws.tags = {
                         'Name' => "#{server[:hostname]}",
@@ -37,22 +39,11 @@ Vagrant.configure("2") do |config|
                         'os' => "#{server[:aws][:ec2][:ami][:os]}" 
                 }
 
-                if defined? server[:aws][:ec2][:network][:private] 
-                then
-                    aws.private_ip_address = "#{server[:aws][:ec2][:network][:private]}"
-                end 
-
                 if defined? server[:aws][:ec2][:network][:public]
-                then
-                    aws.associate_public_ip = "#{server[:aws][:ec2][:network][:public]}"
+                then     
                     aws.ssh_host_attribute = :public_ip_address
                 else
-                    if defined? server[:aws][:ec2][:network][:private] 
-                    then
-                        aws.ssh_host_attribute = "#{server[:aws][:ec2][:network][:private]}" 
-                    else
-                        aws.ssh_host_attribute = :private_ip_address
-                    end
+                    aws.ssh_host_attribute = :privete_ip_address
                 end
 
                 override.ssh.username = "#{server[:aws][:ec2][:ami][:ssh][:user]}" 
