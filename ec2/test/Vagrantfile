@@ -3,6 +3,12 @@ load 'config.rb'
 load 'aws_access.rb'
 $ansible_config = '../../ansible/ansible.cfg'
 
+SERVERS.each do |server|
+    if server[:swarm][:role] == "manager" and server[:swarm][:manager][:initiator]
+    then
+        $swarmInitiatorIp = server[:aws][:ec2][:network][:private]
+    end
+end
 
 Vagrant.configure("2") do |config|
 
@@ -54,16 +60,9 @@ Vagrant.configure("2") do |config|
 
             end
 
-
-
             if server[:aws][:ec2][:ami][:os] == "ubuntu"
             then
                 d.vm.provision "shell", inline: "apt-get update && apt-get install -y python-minimal python2.7"
-            end
-
-            if server[:swarm][:role] == "manager" and server[:swarm][:manager][:initiator]
-            then
-                $swarmInitiatorIp = server[:aws][:ec2][:network][:private]
             end
 
             d.vm.provision "ansible",
@@ -79,12 +78,12 @@ Vagrant.configure("2") do |config|
                             path: "../../scripts/swarm/swarm-init.sh"
                     else
                         d.vm.provision "shell",
-                            args: "#{server[:swarm][:manager][:ip]} #{server[:swarm][:role]}",
+                            args: "${swarmInitiatorIp} #{server[:swarm][:role]}",
                             path: "../../scripts/swarm/swarm-add-node.sh"
                     end
                 when "worker"
                     d.vm.provision "shell",
-                    args: "#{swarmInitiatorIp} #{server[:swarm][:role]}",
+                    args: "${swarmInitiatorIp} #{server[:swarm][:role]}",
                         path: "../../scripts/swarm/swarm-add-node.sh"
             end
 
