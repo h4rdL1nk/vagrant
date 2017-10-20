@@ -75,7 +75,7 @@ Vagrant.configure("2") do |config|
                 when "worker"
                     d.vm.provision "shell",
                     args: $addNodeArgs,
-                        path: "../../scripts/swarm/swarm-add-node.sh"
+                    path: "../../scripts/swarm/swarm-add-node.sh"
             end
 
         end
