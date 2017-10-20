@@ -22,7 +22,6 @@ Vagrant.configure("2") do |config|
             d.vm.synced_folder '.', '/vagrant', disabled: true
 
             d.vm.provider :aws do |aws,override|
-
                 aws.instance_type = "#{server[:aws][:ec2][:type]}"
                 aws.access_key_id = "#{AWS[:credentials][:keyid]}" 
                 aws.secret_access_key = "#{AWS[:credentials][:accesskey]}" 
@@ -48,7 +47,6 @@ Vagrant.configure("2") do |config|
 
                 override.ssh.username = "#{server[:aws][:ec2][:ami][:ssh][:user]}" 
                 override.ssh.private_key_path = "./key.pem"
-
             end
 
             if server[:aws][:ec2][:ami][:os] == "ubuntu"
