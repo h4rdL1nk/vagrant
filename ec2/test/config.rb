@@ -1,12 +1,12 @@
 
 SERVERS = [
-
     {
         :swarm => {
-		:role => 'manager',
-		:manager => {
-			:ip => '10.172.57.240'
-		}
+            :role => 'manager',
+            :manager => {
+                :ip => '10.172.57.240',
+                :initiator => true
+            }
         },
         :hostname => 'swarm-test-1',
         :aws => {
@@ -21,7 +21,7 @@ SERVERS = [
                     :os => 'ubuntu',
                     :ssh => {
                         :user => 'ubuntu'
-                    }	
+                    }
                 },
                 :network => {
                     :subnet => 'subnet-4a0c0f2e',
@@ -32,12 +32,13 @@ SERVERS = [
         }
     },
     {
-	:swarm => {
-        	:role => 'worker',
-		:manager => {
-			:ip => '10.172.57.240'	
-		}
-	},
+        :swarm => {
+            :role => 'worker',
+            :manager => {
+                :ip => '10.172.57.240',
+                :initiator => false
+            }
+        },
         :hostname => 'swarm-test-2',
         :aws => {
             :ec2 => {
