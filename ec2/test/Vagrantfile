@@ -49,11 +49,6 @@ Vagrant.configure("2") do |config|
                     end
                 end
 
-                if server[:role] == "master"
-                then
-                    managerIp = :private_ip_address
-                end
-
                 override.ssh.username = "#{server[:aws][:ec2][:ami][:ssh][:user]}" 
                 override.ssh.private_key_path = "./key.pem"
 
@@ -75,7 +70,7 @@ Vagrant.configure("2") do |config|
                     path: "../../scripts/swarm/swarm-init.sh"
             when "worker"
                 d.vm.provision "shell",
-                    inline: "ping -c1 " + $managerIp
+                    inline: "uname -a"
             end
 
         end
