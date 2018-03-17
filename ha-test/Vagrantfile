@@ -1,0 +1,32 @@
+Vagrant.require_version ">= 1.9.1"
+
+SERVERS = [
+    {
+        :name => "server1",
+	:ip => "192.168.20.4"
+    },
+    {
+        :name => "server2",
+	:ip => "192.168.20.5"
+    }
+]
+
+Vagrant.configure("2") do |config|
+
+    SERVERS.each do |server|
+        config.vm.define "#{server[:name]}" do |d|
+            d.vm.box = "centos/7"
+	    d.vm.box_check_update = true
+	    d.vm.hostname = "#{server[:name]}"
+	    d.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: true
+            d.vm.network "private_network", ip: "#{server[:ip]}"
+
+	    d.vm.provider "virtualbox" do |v|
+		v.name = "#{server[:name]}"
+  		v.gui = false
+		v.memory = 512 
+		v.cpus = 1
+	    end
+        end
+    end
+end
