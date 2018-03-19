@@ -26,6 +26,46 @@
         - /data
         - /data/etcd
 
+    - name: Create SELinux module for logrotate
+      copy:
+        dest: /tmp/logrotate-docker.te
+        content: |
+          module logrotate-docker 1.0;
+
+          require {
+            type svirt_sandbox_file_t;
+            type logrotate_t;
+            class file getattr;
+            class file setattr;
+            class file create;
+            class file rename;
+          }
+
+          allow logrotate_t svirt_sandbox_file_t:file getattr;
+          allow logrotate_t svirt_sandbox_file_t:file setattr;
+          allow logrotate_t svirt_sandbox_file_t:file create;
+          allow logrotate_t svirt_sandbox_file_t:file rename;
+      register: module_file_create
+
+    - name: Check SELinux module
+      shell: "checkmodule -M -m -o /tmp/logrotate-docker.mod /tmp/logrotate-docker.te"
+      when: module_file_create.changed
+      register: module_check
+
+    - name: Package SELinux module
+      shell: "semodule_package -o /tmp/logrotate-docker.pp -m /tmp/logrotate-docker.mod"
+      when: module_check.changed
+      register: module_package
+
+    - name: Install SELinux module
+      shell: "semodule -i /tmp/logrotate-docker.pp"
+      when: module_package.changed
+      register: module_install
+
+    - name: Enable SELinux module
+      shell: "semodule -e logrotate-docker"
+      when: module_install.changed
+
     - name: Start etcd containers
       docker_container:
         state: started
