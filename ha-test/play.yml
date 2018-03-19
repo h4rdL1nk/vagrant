@@ -2,10 +2,41 @@
 
 - name: test
   hosts: etcd 
+  become: true
   tasks:
-    - debug:
-        msg: "{% for server in groups['etcd'] %}{{ hostvars[server]['ip'] }}{% if loop.index < groups['etcd']|length %},{% endif %}{% endfor %}"
-    - unarchive:
-        src: https://github.com/coreos/etcd/releases/download/v3.3.2/etcd-v3.3.2-linux-arm64.tar.gz
-        dest: /tmp
-        remote_src: yes
+    - name: Install docker CE 
+      yum:
+        name: "{{ item }}"
+        state: present 
+      with_items:
+        - https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-17.12.1.ce-1.el7.centos.x86_64.rpm
+        - python-docker-py 
+
+    - name: Enable docker service
+      service:
+        name: docker 
+        state: started
+        enabled: yes 
+
+    - name: Create data directories
+      file:
+        state: directory 
+        path: "{{ item }}" 
+      with_items:
+        - /data
+        - /data/etcd
+
+    - name: Start etcd containers
+      docker_container:
+        state: started
+        name: etcd
+        image: elcolio/etcd 
+        volumes:
+          - /data/etcd:/data:rw
+        published_ports:
+          - "{{ ip }}:2379:2379"
+          - "{{ ip }}:2380:2380"
+        memory: 200m
+        memory_reservation: 150m
+        command: "--name {{ ansible_hostname }} --data-dir=/data --initial-cluster-token etcd-cluster0 --initial-cluster-state new --listen-peer-urls http://0.0.0.0:2380 --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls http://{{ ip }}:2379 --initial-advertise-peer-urls http://{{ ip }}:2380 --initial-cluster {% for server in groups['etcd'] %}{{ server }}=http://{{ hostvars[server]['ip'] }}:2380{% if loop.index < groups['etcd']|length %},{% endif %}{% endfor %}"
+
