@@ -1,8 +1,7 @@
 ---
 
 - name: test
-  hosts: all
+  hosts: etcd 
   tasks:
     - debug:
-        msg: "Host: {{ inventory_hostname }}"
-        #msg: "{% for server in groups['all'] %}{{ hostvars[server] }}{% endfor %}"
+        msg: "{% for server in groups['etcd'] %}{{ hostvars[server]['ip'] }}{% if loop.index < groups['etcd']|length %},{% endif %}{% endfor %}"
