@@ -5,3 +5,7 @@
   tasks:
     - debug:
         msg: "{% for server in groups['etcd'] %}{{ hostvars[server]['ip'] }}{% if loop.index < groups['etcd']|length %},{% endif %}{% endfor %}"
+    - unarchive:
+        src: https://github.com/coreos/etcd/releases/download/v3.3.2/etcd-v3.3.2-linux-arm64.tar.gz
+        dest: /tmp
+        remote_src: yes
