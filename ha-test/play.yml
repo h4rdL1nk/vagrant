@@ -32,7 +32,7 @@
         name: etcd
         image: elcolio/etcd 
         volumes:
-          - /data/etcd:/data:rw
+          - /data/etcd:/data:rw,Z
         published_ports:
           - "{{ ip }}:2379:2379"
           - "{{ ip }}:2380:2380"
