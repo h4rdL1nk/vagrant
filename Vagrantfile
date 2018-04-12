@@ -21,11 +21,12 @@ end
 Vagrant.configure("2") do |config|
 	config.vm.box = "ubuntu/trusty64"
 	config.vm.box_check_update = true
-	config.vm.hostname = "docker-dev"
+	config.vm.hostname = "jenkins-dev"
 	config.vm.post_up_message = "Vagrant box up - connect with 'vagrant ssh'"
 	config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: true
 
-	config.vm.provision "shell", path: "scripts/provision.sh"
+ 	config.vm.provision "shell", path: "scripts/jenkins/install.sh"
+	config.vm.provision "shell", path: "scripts/docker/install.sh"
 	
 	if (defined?(OS.windows)).nil?
 		puts "Windows system provision"
@@ -35,10 +36,13 @@ Vagrant.configure("2") do |config|
 		config.vm.provision "ansible", playbook: "ansible/play.yml"
 	end
 
+	config.vm.network "forwarded_port", guest: 8080, host: 8080
+
 	config.vm.provider "virtualbox" do |v|
-		v.name = "docker-dev"
+		v.name = "jenkins-dev"
   		v.gui = false
 		v.memory = 1024
 		v.cpus = 1
 	end
+        
 end
