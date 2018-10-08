@@ -1,0 +1,43 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: SELinux enable
+      selinux:
+        policy: targeted
+        state: enforcing
+    - name: Install docker
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - python-docker-py
+        - https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-18.06.1.ce-3.el7.x86_64.rpm
+    - name: Enable docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+    - name: Create docker directories
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items:
+        - /data/dockershared
+    - name: Create index file
+      copy:
+        dest: /data/dockershared/apache_server/index.html
+        content: |
+          <html>
+            <h1>It works!</h1>
+          </html>
+    - name: Start httpd container
+      docker_container:
+        name: apache_server
+        image: httpd:alpine
+        state: started
+        memory: 50m
+        ports:
+          - "8080:80"
+        volumes:
+          - "/data/dockershared/apache_server:/usr/local/apache2/htdocs:Z"
