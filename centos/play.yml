@@ -8,7 +8,7 @@
           hosts:
             - "unix:///var/run/docker.sock"
             - "tcp://0.0.0.0:2375"
-          bip: "172.16.1.0/24"
+          bip: "172.17.0.1/16"
         systemd:
           unit: /lib/systemd/system/docker.service
   tasks:
