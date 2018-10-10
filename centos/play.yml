@@ -1,8 +1,18 @@
 ---
 - hosts: all
   become: true
+  vars:
+    docker:
+      config:
+        daemon:
+          hosts:
+            - "unix:///var/run/docker.sock"
+            - "tcp://0.0.0.0:2375"
+          bip: "172.16.1.0/24"
+        systemd:
+          unit: /lib/systemd/system/docker.service
   tasks:
-    - name: SELinux enable
+    - name: Enable SELinux
       selinux:
         policy: targeted
         state: enforcing
@@ -13,10 +23,20 @@
       with_items:
         - python-docker-py
         - https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-18.06.1.ce-3.el7.x86_64.rpm
+    - name: Edit systemd unit file
+      replace:
+        path: "{{ docker.config.systemd.unit }}"
+        regexp: "^ExecStart=.*"
+        replace: "ExecStart=/usr/bin/dockerd"
+        backup: yes
+    - name: Create docker config file
+      copy:
+        dest: /etc/docker/daemon.json
+        content: "{{ docker.config.daemon | to_nice_json }}"
     - name: Enable docker service
       service:
         name: docker
-        state: started
+        state: restarted
         enabled: yes
     - name: Create docker directories
       file:
