@@ -26,9 +26,23 @@ Vagrant.configure("2") do |config|
             d.vm.provision "shell", 
                 env: { "ETCD_CL_NAME" => "etcd-cluster" },
                 inline: <<-SHELL
-                    yum install -y ntp
+                    yum install -y epel-release yum-utils \
+                        device-mapper-persistent-data \
+                        lvm2
+
+                    yum-config-manager \
+                        --add-repo \
+                        https://download.docker.com/linux/centos/docker-ce.repo
+
+                    yum install -y docker-ce ntp jq
+
                     systemctl enable ntpd
                     systemctl start ntpd
+
+                    [ ! -d /etc/docker ] && mkdir /etc/docker
+                    echo "{}" | jq '."exec-opts" |= .+ ["native.cgroupdriver=systemd"]' > /etc/docker/daemon.json
+
+                    systemctl restart docker.service
                 SHELL
         end
     end
